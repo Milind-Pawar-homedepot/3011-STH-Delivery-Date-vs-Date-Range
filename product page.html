@@ -1,0 +1,280 @@
+<script>
+
+  try {
+
+    
+    
+    function stringToDate  (dateString)
+              {
+                 
+                
+                let plp_date= dateString.split(' ');
+                    plp_date.push('2022');
+                    return new Date(plp_date)
+  
+              }
+  
+              function dateChangetile(website_date)
+  {
+              const raw_date= website_date.split(' ');
+                
+             // console.log(raw_date)
+                  
+              const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                        
+             
+             
+              let  mm = monthNames.indexOf(raw_date[1])+1
+             
+              
+              let dd =raw_date[2]
+             
+              
+              let strinddate= mm+`/`+dd+`/2022`;
+
+              let promiseDate = new Date(strinddate)
+
+             
+
+              let currentTime = new Date();
+              
+                
+              const time = Math.abs(promiseDate.getTime() - currentTime.getTime());
+               
+               
+              const days = Math.ceil(time / (1000 * 60 * 60 * 24));
+             
+               
+                
+              let UpdatedDateInterval;
+              if(days>1 && days<=21)
+              {
+                      const dateRange =( inputDate)=>
+                      { 
+                      if(1<inputDate && inputDate<=3){  return 1}
+                      if(4<=inputDate && inputDate<=6){return 2}
+                      if(7<=inputDate && inputDate<=13){return 3}
+                      if(14<=inputDate && inputDate<=21){return 4}
+                      }
+  
+                      const expectedminusdate= dateRange(days)
+       
+                      let startdate  =new Date(promiseDate.getTime() - (expectedminusdate * 24 * 60 * 60 * 1000))
+                  
+                      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+                      UpdatedDateInterval =  monthNames[startdate .getMonth()]+' '+startdate .getDate()+' - '+ monthNames[promiseDate .getMonth()]+' '+promiseDate .getDate();
+                     
+                   //   document.getElementsByClassName("fulfillment__sub-title")[postionOfElemnt].innerHTML=`<div class="fulfillment__sub-title"><div>Get it by</div><div class="u__bold" id='tnt_change'>`+UpdatedDateInterval+`</div></div>`;
+              }
+              return UpdatedDateInterval;
+}
+
+
+
+
+  function dateChange(website_date, postionOfElemnt)
+              {
+              
+  
+             //  website_date = website_date + ',2022'
+                        
+              
+
+              var promiseDate = stringToDate(website_date);
+            
+              var mm = promiseDate.getMonth()+1 ;
+              var dd = promiseDate.getDate() ;
+              
+              var strinddate= mm+`/`+dd+`/2022`;
+              console.log(strinddate);
+
+              var finaldatepromiseDate = new Date(strinddate)
+            
+              let currentTime = new Date();
+              
+                
+              const time = Math.abs(finaldatepromiseDate.getTime() - currentTime.getTime());
+               
+               
+              const days = Math.ceil(time / (1000 * 60 * 60 * 24));
+             
+               
+                
+                
+                
+              let UpdatedDateInterval;
+              if(days>1 && days<=21)
+              {
+                      const dateRange =( inputDate)=>
+                      { 
+                      if(1<inputDate && inputDate<=3){  return 1}
+                      if(4<=inputDate && inputDate<=6){return 2}
+                      if(7<=inputDate && inputDate<=13){return 3}
+                      if(14<=inputDate && inputDate<=21){return 4}
+                      }
+  
+                      const expectedminusdate= dateRange(days)
+       
+                      let startdate  =new Date(promiseDate.getTime() - (expectedminusdate * 24 * 60 * 60 * 1000))
+                  
+                      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+                      UpdatedDateInterval =  monthNames[startdate .getMonth()]+' '+startdate .getDate()+' - '+ monthNames[promiseDate .getMonth()]+' '+promiseDate .getDate();
+                     
+                   //   document.getElementsByClassName("fulfillment__sub-title")[postionOfElemnt].innerHTML=`<div class="fulfillment__sub-title"><div>Get it by</div><div class="u__bold" id='tnt_change'>`+UpdatedDateInterval+`</div></div>`;
+              }
+              return UpdatedDateInterval;
+  
+              }
+      
+              let cartObserver
+  
+      const tt = ({ animationName, target }) =>
+           {
+        if (animationName === 'cart-loaded') {
+             
+          cartObserver && cartObserver.disconnect()
+  
+          cartObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+             
+                   
+
+                    let checkExist1 = setInterval(function() 
+                      {   
+                        if(document.querySelectorAll('a.card.card-container').length>0)
+                        {
+                          if(!document.getElementsByClassName("card card-container")[1].className.includes("card-unclickable"))
+                          {
+                        if(document.getElementsByClassName("card card-container")[1].getElementsByClassName("fulfillment__sub-title")[0].getElementsByClassName("u__bold")[0])
+                        {
+
+                          let text =  document.getElementsByClassName("card card-container")[1].getElementsByClassName("fulfillment__sub-title")[0].getElementsByClassName("u__bold")[0].innerText.replace("Tomorrow,"," ").trim(" ");
+                      
+                           if(text)
+                            {   
+                               let  updatedDates= dateChangetile(text);
+                               
+                                if(updatedDates!=null)
+                                {
+                                  
+                                    document.getElementsByClassName("card card-container")[1].getElementsByClassName("fulfillment__sub-title")[0].getElementsByClassName("u__bold")[0].innerText= updatedDates;
+                                    document.getElementsByClassName("card card-container")[1].getElementsByClassName("fulfillment__sub-title")[0].getElementsByClassName("u__bold")[0].id="tnt_111";
+                                    clearInterval(checkExist1);
+                                  
+                                }
+
+                           
+
+                                if(document.querySelector(".countDownTimer-deta"))
+                              {
+                                document.querySelector(".countDownTimer-deta").style.display='none';
+                              }
+
+                             if( document.querySelectorAll(".countDownTimer-wrapper>div")[0])
+                             {
+                              document.querySelectorAll(".countDownTimer-wrapper>div")[0].style.display='none'
+                             }
+                              
+
+                                    
+                            }
+
+
+                        }}
+                      }
+                      }, 100);
+                  
+                          let deliveryButtonClickFunction = setInterval(function() 
+                    {
+                        let htmlElement= document.getElementsByClassName("left date dots");
+                            
+                        for (let i = 0; i < htmlElement.length; i++) {
+                        
+                          if (htmlElement[i] )
+                            {
+                              if( htmlElement[i].id !=="tnt_change") 
+                              {
+                                
+        
+                                let text= htmlElement[i].innerText;
+                                console.log(text)
+                                if(text)
+                                    {    
+                                      let  newDates= dateChange(text);
+        
+                                        if(newDates!=null)
+                                        {
+                                            htmlElement[i].innerText= newDates;
+                                            htmlElement[i].id="tnt_change";
+                                        }
+                                    }
+                              }  
+                            }
+                          
+                        }
+                        
+                        let dateElement= document.getElementsByClassName("date")
+                        if(dateElement[0])
+                        {
+                          if( dateElement[0].id !=="tnt_change") 
+                              {
+                                
+        
+                                let text= dateElement[0].innerText;
+        
+                                if(text)
+                                    {    
+                                      let  newDates= dateChange(text);
+        
+                                        if(newDates!=null)
+                                        {
+                                          dateElement[0].innerText= newDates;
+                                          dateElement[0].id="tnt_change";
+                                        }
+                                    }
+                              }  
+
+                        }
+                          
+                    }, 100);
+               
+          
+                  })
+          })
+  
+          cartObserver.observe(target, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] })
+        } 
+  
+      }
+  
+        
+  
+      document.addEventListener("animationstart", tt, false)
+      document.addEventListener("MSAnimationStart", tt, false)
+      document.addEventListener("webkitAnimationStart", tt, false)
+    } catch (error) {
+      cartObserver && cartObserver.disconnect()
+    }
+  
+  </script>
+  
+  <style id="styles-xxxx">
+    
+      @keyframes cart-loaded {
+      from {
+        opacity: 0.99;
+      }
+  
+      to {
+        opacity: 1;
+      }
+    }
+      
+      
+    div[data-lg-name="buybox"] {
+          animation: cart-loaded 0.001s;
+    }
+  
+  </style>

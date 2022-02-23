@@ -1,0 +1,457 @@
+<script>
+  try {
+    try {
+      function stringToDate(dateString) {
+        let plp_date = dateString.split(' ')
+        plp_date.push('2022')
+        return new Date(plp_date)
+      }
+
+      function extractDate(website_date) {
+
+        const raw_date = website_date.split(' ')
+
+        const monthNames = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ]
+
+        let mm = monthNames.indexOf(raw_date[1]) + 1
+
+        let dd = raw_date[2]
+
+        let strinddate = mm + `/` + dd + `/2022`
+
+        let promiseDate = new Date(strinddate)
+
+        return promiseDate;
+      }
+
+      function dateChange(website_date) {
+        const raw_date = website_date.split(' ')
+
+        const monthNames = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ]
+
+        let mm = monthNames.indexOf(raw_date[1]) + 1
+
+        let dd = raw_date[2]
+
+        let strinddate = mm + `/` + dd + `/2022`
+
+        let promiseDate = new Date(strinddate)
+
+        var currentTime1 = new Date()
+
+        const time = Math.abs(promiseDate - currentTime1)
+        const days = Math.ceil(time / (1000 * 60 * 60 * 24))
+
+        let UpdatedDateInterval
+        if (days > 1 && days <= 21) {
+          const dateRange = (inputDate) => {
+            if (1 < inputDate && inputDate <= 3) {
+              return 1
+            }
+            if (4 <= inputDate && inputDate <= 6) {
+              return 2
+            }
+            if (7 <= inputDate && inputDate <= 13) {
+              return 3
+            }
+            if (14 <= inputDate && inputDate <= 21) {
+              return 4
+            }
+          }
+
+          const expectedminusdate = dateRange(days)
+
+          let startdate = new Date(
+            promiseDate.getTime() - expectedminusdate * 24 * 60 * 60 * 1000
+          )
+          // var startdate = new Date(
+          //   new Date().setDate(promiseDate.getDate() - expectedminusdate)
+          // )
+          const monthNames = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ]
+
+          UpdatedDateInterval =
+            monthNames[startdate.getMonth()] +
+            ' ' +
+            startdate.getDate() +
+            ' - ' +
+            monthNames[promiseDate.getMonth()] +
+            ' ' +
+            promiseDate.getDate()
+        }
+        return UpdatedDateInterval
+      }
+
+      function dayDiffernce(website_date) {
+        const raw_date = website_date.split(' ')
+
+        const monthNames = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ]
+
+        let mm = monthNames.indexOf(raw_date[1]) + 1
+
+        let dd = raw_date[2]
+
+        let strinddate = mm + `/` + dd + `/2022`
+
+        let promiseDate = new Date(strinddate)
+
+        let currentTime1 = new Date()
+
+        const time = Math.abs(promiseDate - currentTime1)
+        const days = Math.ceil(time / (1000 * 60 * 60 * 24))
+
+        return days
+      }
+
+      function initialChange() {
+        var intervalFunction = setInterval(function () {
+          const url = window.location.href
+          if (url.includes('/mycart/')) {
+            if (document.getElementsByClassName('cartItemMobile').length > 0) {
+              cartDateChnage()
+
+              clearInterval(intervalFunction)
+            }
+          }
+        }, 100)
+      }
+
+      function cartDateChnage() {
+        var elementArray = []
+
+        var data = document.getElementsByClassName(
+          'card card-container card-selected card-background card-enabled mobile--margin-right'
+        )
+
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].innerText.includes('Ship To Home')) {
+            elementArray.push(
+              data[i].querySelector('.u__p-bottom--normal>div>div')
+            )
+          }
+        }
+
+        for (let i = 0; i < elementArray.length; i++) {
+          if (!elementArray[i].querySelector('.u__legal')) {}
+
+          if (elementArray[i].querySelectorAll('.u__bold')) {
+            if (elementArray[i].querySelectorAll('.u__bold').length === 1) {
+              let oldDate =
+                elementArray[i].querySelectorAll('.u__bold')[0].innerText
+              let newDate = dateChange(oldDate)
+              if (newDate) {
+                //elementArray[i].querySelectorAll('.u__bold')[1].innerText = newDate;
+                elementArray[i].querySelectorAll('.u__bold')[0].innerHTML =
+                  newDate
+                elementArray[i]
+                  .querySelectorAll('.u__bold')[0]
+                  .setAttribute('id', 'tnt_change')
+              }
+            }
+          }
+          if (elementArray[i].querySelectorAll('.u__bold')) {
+            if (elementArray[i].querySelectorAll('.u__bold').length === 2) {
+              let oldDate =
+                elementArray[i].querySelectorAll('.u__bold')[1].innerText
+              let newDate = dateChange(oldDate)
+              let totalDiffernce = dayDiffernce(oldDate)
+              if (newDate) {
+                // elementArray[i].querySelectorAll('.u__bold')[1].innerHTML = newDate;
+                // elementArray[i].querySelectorAll('.u__bold')[1].setAttribute('id', 'tnt_change');
+                elementArray[i].innerHTML =
+                  `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                  newDate +
+                  `</span></span></div>`
+              } else if (oldDate.includes('Tomorrow')) {
+                elementArray[i].innerHTML =
+                  `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                  oldDate +
+                  `</span></span></div>`
+              } else if (totalDiffernce === 1) {
+                elementArray[i].innerHTML =
+                  `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                  oldDate +
+                  `</span></span></div>`
+              }
+            }
+          }
+          if (elementArray[i].querySelector('.u__legal')) {
+            let oldDate = elementArray[i].querySelector('.u__legal').innerText
+            let newDate = dateChange(oldDate)
+            if (newDate) {
+              elementArray[i].querySelector('.u__legal').innerText = newDate
+              elementArray[i]
+                .querySelector('.u__legal')
+                .setAttribute('id', 'tnt_change')
+            }
+          }
+        }
+      }
+
+      let cartObserver
+
+      const tt = ({
+        animationName,
+        target
+      }) => {
+        if (animationName === 'cart-loaded') {
+          cartObserver && cartObserver.disconnect()
+
+          cartObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              try {
+                if (
+                  mutation.target.className.includes('cartItem__qtyInput_mobile'))
+                   {
+                      let TileDateElement =
+                        mutation.target.parentElement.parentElement.parentElement.parentElement.parentElement
+                        .parentElement.parentElement
+                        .getElementsByClassName('card card-container')[1]
+                        .querySelector('.u__p-bottom--normal>div>div')
+
+                      let data = TileDateElement.querySelector('.u__bold').innerText ;
+
+                      let timesRun = 0
+                      let test = setInterval(function () {
+                    timesRun += 1
+                    if (
+                      TileDateElement.querySelector('.u__bold').innerText !==
+                      data
+                    ) {
+                      if (TileDateElement) {
+                        if (TileDateElement.querySelector('.u__legal')) {
+                          let oldDate =
+                            TileDateElement.querySelector('.u__legal').innerText
+
+                          let newDate = dateChange(oldDate)
+                          if (newDate) {
+                            TileDateElement.querySelector(
+                              '.u__legal'
+                            ).innerText = newDate
+                            clearInterval(test)
+                          }
+                        }
+                        if (TileDateElement.querySelector('.u__bold')) {
+                          let oldDate =
+                            TileDateElement.querySelector('.u__bold').innerText
+
+                          let newDate = dateChange(oldDate);
+                          let totalDiffernce = dayDiffernce(oldDate)
+                          if (newDate) {
+                            TileDateElement.querySelector(
+                              '.u__bold'
+                            ).innerText = newDate
+                            clearInterval(test)
+                          }
+                        }
+                        if (TileDateElement.querySelectorAll('.u__bold')) {
+                          if (
+                            TileDateElement.querySelectorAll('.u__bold')
+                            .length === 2
+                          ) {
+                            let oldDate =
+                              TileDateElement.querySelectorAll('.u__bold')[1]
+                              .innerText;
+                            let newDate = dateChange(oldDate);
+                            let totalDiffernce = dayDiffernce(oldDate)
+                            if (newDate) {
+                              // TileDateElement.querySelectorAll('.u__bold')[1].innerHTML = '</br>'+newDate+'';
+                              // TileDateElement.querySelectorAll('.u__bold')[1].setAttribute('id', 'tnt_change')
+
+                              TileDateElement.innerHTML =
+                                `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                                newDate +
+                                `</span></span></div>`
+
+                              clearInterval(test)
+                            } else if (oldDate.includes('Tomorrow')) {
+                              TileDateElement.innerHTML =
+                                `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                                oldDate +
+                                `</span></span></div>`
+                              clearInterval(test)
+                            } else if (totalDiffernce === 1) {
+                              console.log(extractDate(oldDate))
+                              TileElement.innerHTML =
+                                `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                                oldDate +
+                                `</span></span></div>`
+                              clearInterval(test)
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    if (timesRun === 50) {
+                      clearInterval(test)
+                    }
+                  }, 100)
+                }
+              } catch (error) {}
+                console.log(mutation.target.className);
+                console.log(mutation.target);
+              if ('u__center' === mutation.target.className && mutation.addedNodes.length > 0 && mutation.target.innerText.includes('Ship To Home'))
+               {
+                 console.log( mutation.target.className)
+                if (mutation.addedNodes[0].className === 'u__p-bottom--normal')
+                {
+                  var TileElement = mutation.target.querySelector('.u__p-bottom--normal>div>div')
+                  if (TileElement.querySelector('.u__legal')) {
+                    let oldDate = mutation.target
+                      .querySelector('.u__p-bottom--normal>div>div')
+                      .querySelector('.u__legal').innerText
+
+                    let newDate = dateChange(oldDate)
+                    if (newDate) {
+                      mutation.target
+                        .querySelector('.u__p-bottom--normal>div>div')
+                        .querySelector('.u__legal').innerText = newDate
+                    }
+                  }
+                  if (TileElement.querySelectorAll('.u__bold')) {
+                    if (TileElement.querySelectorAll('.u__bold').length === 1) {
+                      let oldDate =
+                        TileElement.querySelectorAll('.u__bold')[0].innerText
+                      let newDate = dateChange(oldDate)
+                      if (newDate) {
+                        //elementArray[i].querySelectorAll('.u__bold')[1].innerText = newDate;
+                        TileElement.querySelectorAll('.u__bold')[0].innerHTML =
+                          newDate
+                        TileElement.querySelectorAll(
+                          '.u__bold'
+                        )[0].setAttribute('id', 'tnt_change')
+                      }
+                    }
+                  }
+                  if (TileElement.querySelectorAll('.u__bold')) {
+                    if (TileElement.querySelectorAll('.u__bold').length === 2) {
+                      let oldDate =
+                        TileElement.querySelectorAll('.u__bold')[1].innerText
+                      let newDate = dateChange(oldDate);
+                      let totalDiffernce = dayDiffernce(oldDate)
+                      if (newDate) {
+                        //  TileElement.querySelectorAll('.u__bold')[1].innerHTML = '</br>'+newDate+'';
+                        //  TileElement.querySelectorAll('.u__bold')[1].setAttribute('id', 'tnt_change')
+
+                        TileElement.innerHTML =
+                          `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                          newDate +
+                          `</span></span></div>`
+                      } else if (oldDate.includes('Tomorrow')) {
+
+                        console.log(extractDate(oldDate))
+                        TileElement.innerHTML =
+                          `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                          oldDate +
+                          `</span></span></div>`
+                      } else if (totalDiffernce === 1) {
+                        TileElement.innerHTML =
+                          `<div><span><p>Estimated Arrival:</p><span class="u__legal" id="tnt_change">` +
+                          oldDate +
+                          `</span></span></div>`
+                      }
+                    }
+                  }
+                }
+              }
+            })
+          })
+
+          cartObserver.observe(target, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class'],
+          })
+        }
+      }
+
+      document.addEventListener('animationstart', tt, false)
+      document.addEventListener('MSAnimationStart', tt, false)
+      document.addEventListener('webkitAnimationStart', tt, false)
+    } catch (error) {
+      cartObserver && cartObserver.disconnect()
+    }
+
+    let cartItemCount = document.querySelectorAll('.cartItemMobile').length
+    let intervalFunction1 = setInterval(function () {
+      if (
+        cartItemCount !== document.querySelectorAll('.cartItemMobile').length
+      ) {
+        cartItemCount = document.querySelectorAll('.cartItemMobile').length
+
+        initialChange()
+      }
+    }, 100)
+
+    document.body.onload = initialChange()
+  } catch (error) {}
+</script>
+
+<style id="styles-xxxx">
+  @keyframes cart-loaded {
+    from {
+      opacity: 0.99;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .cart-main-container>.grid .u__p-all--none {
+    animation: cart-loaded 0.001s;
+  }
+</style>
